@@ -11,7 +11,9 @@
                         <div class="card-title py-3">
                             <h4>Register for an account</h4>
                         </div>
-                        <form action="" method="post" class="row g-3">
+                        <form action="{% url 'register' %}" method="post" class="row g-3">
+                            {% csrf_token %}
+                            {% include 'partials/_messages.html' %}
                             <div class="form-group">
                                 <input type="text"
                                        name="username"
