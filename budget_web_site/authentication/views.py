@@ -119,7 +119,6 @@ class LoginView(View):
                     auth.login(request, user)
                     messages.success(request, 'Welcome ' + user.username + ', you are now logged in')
                     return redirect('expenses')
-
                 messages.error(request, 'Account is not activated, please check your email for activation link.')
                 return render(request, 'authentication/login.html')
             messages.error(request, 'Invalid credentials, try again.')
