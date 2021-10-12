@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
 <div class="container-fluid mt-4">
     <div class="row">
@@ -26,10 +27,19 @@
 </div>
 <div class="container-fluid">
     {% if expenses.count %}
-        <table class="table table-stripped table-hover table-sm">
+    <div class="row">
+        <div class="col-md-8"></div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <input type="text" class="form-control" id="searchField" placeholder="Search">
+            </div>
+        </div>
+    </div>
+    <div class="table-app">
+                <table class="table table-stripped table-hover table-sm">
             <thead>
                 <tr>
-                    <th>Amount(Currency)</th>
+                    <th>Amount ({{currency}})</th>
                     <th>Category</th>
                     <th>Description</th>
                     <th>Date</th>
@@ -53,6 +63,24 @@
             {% endfor %}
             </tbody>
         </table>
+    </div>
+    <div class="no-results">No results found</div>
+    <div class="table-output">
+        <table class="table table-stripped table-hover table-sm">
+            <thead>
+                <tr>
+                    <th>Amount ({{currency}})</th>
+                    <th>Category</th>
+                    <th>Description</th>
+                    <th>Date</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody class="table-body">
+            </tbody>
+        </table>
+    </div>
+    <div class="pagination-container">
         <div class="row">
             <div class="col-md-6">
                 Showing page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
@@ -79,5 +107,7 @@
             </div>
         </div>
     {% endif %}
+    </div>
 </div>
+<script src="{% static 'js/searchExpenses.js' %}"></script>
 {% endblock %}
