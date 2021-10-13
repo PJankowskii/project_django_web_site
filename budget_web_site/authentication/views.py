@@ -60,9 +60,10 @@ class RegistrationView(View):
         username = request.POST['username']
         email = request.POST['email']
         password = request.POST['password']
-        context = {
-            'fieldValues': request.POST
-        }
+        context = \
+            {
+                'fieldValues': request.POST
+            }
         if not User.objects.filter(username=username).exists():
             if not User.objects.filter(email=email).exists():
                 if len(password) < 6:
@@ -101,7 +102,7 @@ class VerificationView(View):
                 return redirect('login')
             user.is_active = True
             user.save()
-            messages.success(request, 'Account activated successfully.')
+            messages.success(request, 'Account activated successfully')
             return redirect('login')
 
         except Exception as ex:
@@ -124,18 +125,18 @@ class LoginView(View):
                     auth.login(request, user)
                     messages.success(request, 'Welcome ' + user.username + ', you are now logged in')
                     return redirect('expenses')
-                messages.error(request, 'Account is not activated, please check your email for activation link.')
+                messages.error(request, 'Account is not activated, please check your email for activation link')
                 return render(request, 'authentication/login.html')
-            messages.error(request, 'Invalid credentials, try again.')
+            messages.error(request, 'Invalid credentials, try again')
             return render(request, 'authentication/login.html')
-        messages.error(request, 'Please fill all fields.')
+        messages.error(request, 'Please fill all fields')
         return render(request, 'authentication/login.html')
 
 
 class LogoutView(View):
     def post(self, request):
         auth.logout(request)
-        messages.success(request, 'You have been logged out.')
+        messages.success(request, 'You have been logged out')
         return redirect('login')
 
 
@@ -156,12 +157,13 @@ class ResetPassword(View):
         current_site = get_current_site(request)
         user = User.objects.filter(email=email)
         if user.exists():
-            email_contents = {
-                'user': user[0],
-                'domain': current_site.domain,
-                'uid': urlsafe_base64_encode(force_bytes(user[0].pk)),
-                'token': PasswordResetTokenGenerator().make_token(user[0]),
-            }
+            email_contents = \
+                {
+                    'user': user[0],
+                    'domain': current_site.domain,
+                    'uid': urlsafe_base64_encode(force_bytes(user[0].pk)),
+                    'token': PasswordResetTokenGenerator().make_token(user[0]),
+                }
 
             link = reverse('reset-user-password',
                            kwargs={'uidb64': email_contents['uid'], 'token': email_contents['token']})
@@ -226,5 +228,3 @@ class CompletePasswordReset(View):
         except Exception as identifier:
             messages.info(request, 'Something went wrong, try again')
             return render(request, 'authentication/set_new_password.html', context)
-
-        # return render(request, 'authentication/set_new_password.html', context)

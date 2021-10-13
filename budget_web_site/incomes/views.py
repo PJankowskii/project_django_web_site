@@ -13,25 +13,27 @@ from user_preferences.models import UserPreference
 def index(request):
     sources = Source.objects.all()
     incomes = Income.objects.filter(owner=request.user)
-    paginator = Paginator(incomes, 3)
+    paginator = Paginator(incomes, 5)
     page_number = request.GET.get('page')
     page_obj = Paginator.get_page(paginator, page_number)
     currency = UserPreference.objects.get(user=request.user).currency
-    context = {
-        'incomes': incomes,
-        'page_obj': page_obj,
-        'currency': currency,
-    }
+    context = \
+        {
+            'incomes': incomes,
+            'page_obj': page_obj,
+            'currency': currency,
+        }
     return render(request, 'incomes/index.html', context)
 
 
 @login_required(login_url='login')
 def add_income(request):
     sources = Source.objects.all()
-    context = {
-        'sources': sources,
-        'values': request.POST,
-    }
+    context = \
+        {
+            'sources': sources,
+            'values': request.POST,
+        }
     if request.method == "GET":
         return render(request, 'incomes/add_income.html', context)
 
@@ -44,19 +46,19 @@ def add_income(request):
         # pdb.set_trace()
 
         if not amount:
-            messages.error(request, 'Amount is require.')
+            messages.error(request, 'Amount is require')
             return render(request, 'incomes/add_income.html', context)
 
         if not description:
-            messages.error(request, 'Description is require.')
+            messages.error(request, 'Description is require')
             return render(request, 'incomes/add_income.html', context)
 
         if not date:
-            messages.error(request, 'Date is require.')
+            messages.error(request, 'Date is require')
             return render(request, 'incomes/add_income.html', context)
 
         Income.objects.create(owner=request.user, amount=amount, date=date, source=source, description=description)
-        messages.success(request, 'Income saved successfully.')
+        messages.success(request, 'Income saved successfully')
         return redirect('incomes')
 
 
@@ -64,11 +66,12 @@ def add_income(request):
 def edit_income(request, id):
     income = Income.objects.get(pk=id)
     sources = Source.objects.all()
-    context = {
-        'income': income,
-        'values': income,
-        'sources': sources,
-    }
+    context = \
+        {
+            'income': income,
+            'values': income,
+            'sources': sources,
+        }
     if request.method == "GET":
         return render(request, 'incomes/edit_income.html', context)
     if request.method == "POST":
@@ -77,17 +80,17 @@ def edit_income(request, id):
         date = request.POST['income_date']
         source = request.POST['source']
         if not amount:
-            messages.error(request, 'Amount is require.')
+            messages.error(request, 'Amount is require')
             return render(request, 'incomes/edit_income.html', context)
         if not description:
-            messages.error(request, 'Description is require.')
+            messages.error(request, 'Description is require')
             return render(request, 'incomes/edit_income.html', context)
         income.amount = amount
         income.date = date
         income.source = source
         income.description = description
         income.save()
-        messages.success(request, 'Income saved successfully.')
+        messages.success(request, 'Income saved successfully')
         return redirect('incomes')
 
 
@@ -95,7 +98,7 @@ def edit_income(request, id):
 def delete_income(request, id):
     income = Income.objects.get(pk=id)
     income.delete()
-    messages.success(request, 'Income removed.')
+    messages.success(request, 'Income removed')
     return redirect('incomes')
 
 

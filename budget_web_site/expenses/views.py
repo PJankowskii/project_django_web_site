@@ -13,25 +13,27 @@ from user_preferences.models import UserPreference
 def index(request):
     categories = Category.objects.all()
     expenses = Expense.objects.filter(owner=request.user)
-    paginator = Paginator(expenses, 3)
+    paginator = Paginator(expenses, 5)
     page_number = request.GET.get('page')
     page_obj = Paginator.get_page(paginator, page_number)
     currency = UserPreference.objects.get(user=request.user).currency
-    context = {
-        'expenses': expenses,
-        'page_obj': page_obj,
-        'currency': currency,
-    }
+    context = \
+        {
+            'expenses': expenses,
+            'page_obj': page_obj,
+            'currency': currency,
+        }
     return render(request, 'expenses/index.html', context)
 
 
 @login_required(login_url='login')
 def add_expense(request):
     categories = Category.objects.all()
-    context = {
-        'categories': categories,
-        'values': request.POST
-    }
+    context = \
+        {
+            'categories': categories,
+            'values': request.POST
+        }
     if request.method == "GET":
         return render(request, 'expenses/add_expense.html', context)
 
@@ -44,19 +46,19 @@ def add_expense(request):
         # pdb.set_trace()
 
         if not amount:
-            messages.error(request, 'Amount is require.')
+            messages.error(request, 'Amount is require')
             return render(request, 'expenses/add_expense.html', context)
 
         if not description:
-            messages.error(request, 'Description is require.')
+            messages.error(request, 'Description is require')
             return render(request, 'expenses/add_expense.html', context)
 
         if not date:
-            messages.error(request, 'Date is require.')
+            messages.error(request, 'Date is require')
             return render(request, 'expenses/add_expense.html', context)
 
         Expense.objects.create(owner=request.user, amount=amount, date=date, category=category, description=description)
-        messages.success(request, 'Expense saved successfully.')
+        messages.success(request, 'Expense saved successfully')
         return redirect('expenses')
 
 
@@ -64,11 +66,12 @@ def add_expense(request):
 def edit_expense(request, id):
     expense = Expense.objects.get(pk=id)
     categories = Category.objects.all()
-    context = {
-        'expense': expense,
-        'values': expense,
-        'categories': categories,
-    }
+    context = \
+        {
+            'expense': expense,
+            'values': expense,
+            'categories': categories,
+        }
     if request.method == "GET":
         return render(request, 'expenses/edit_expense.html', context)
     if request.method == "POST":
@@ -77,10 +80,10 @@ def edit_expense(request, id):
         date = request.POST['expense_date']
         category = request.POST['category']
         if not amount:
-            messages.error(request, 'Amount is require.')
+            messages.error(request, 'Amount is require')
             return render(request, 'expenses/edit_expense.html', context)
         if not description:
-            messages.error(request, 'Description is require.')
+            messages.error(request, 'Description is require')
             return render(request, 'expenses/edit_expense.html', context)
         expense.owner = request.user
         expense.amount = amount
@@ -88,7 +91,7 @@ def edit_expense(request, id):
         expense.category = category
         expense.description = description
         expense.save()
-        messages.success(request, 'Expense saved successfully.')
+        messages.success(request, 'Expense saved successfully')
         return redirect('expenses')
 
 
@@ -96,7 +99,7 @@ def edit_expense(request, id):
 def delete_expense(request, id):
     expense = Expense.objects.get(pk=id)
     expense.delete()
-    messages.success(request, 'Expense removed.')
+    messages.success(request, 'Expense removed')
     return redirect('expenses')
 
 

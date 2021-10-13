@@ -35,50 +35,58 @@
             </div>
         </div>
     </div>
-    <div class="table-app mt-3">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-app mt-3">
                 <table class="table table-stripped table-hover table-sm">
-            <thead>
-                <tr>
-                    <th>Amount ({{currency}})</th>
-                    <th>Category</th>
-                    <th>Description</th>
-                    <th>Date</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for expense in page_obj %}
-                <tr>
-                    <td>{{expense.amount}}</td>
-                    <td>{{expense.category}}</td>
-                    <td>{{expense.description}}</td>
-                    <td>{{expense.date}}</td>
-                    <td>
-                        <a
-                            href="{% url 'edit-expense' expense.id %}"
-                            class="btn btn-outline-secondary btn-sm">Edit
-                        </a>
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+                    <thead>
+                        <tr>
+                            <th>Amount ({{currency}})</th>
+                            <th>Category</th>
+                            <th>Description</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for expense in page_obj %}
+                        <tr>
+                            <td>{{expense.amount}}</td>
+                            <td>{{expense.category}}</td>
+                            <td>{{expense.description}}</td>
+                            <td>{{expense.date}}</td>
+                            <td>
+                                <a
+                                    href="{% url 'edit-expense' expense.id %}"
+                                    class="text-secondary">Edit
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
     <div class="no-results">No results found</div>
-    <div class="table-output">
-        <table class="table table-stripped table-hover table-sm">
-            <thead>
-                <tr>
-                    <th>Amount ({{currency}})</th>
-                    <th>Category</th>
-                    <th>Description</th>
-                    <th>Date</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody class="table-body">
-            </tbody>
-        </table>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-output">
+                <table class="table table-stripped table-hover table-sm">
+                    <thead>
+                        <tr>
+                            <th>Amount ({{currency}})</th>
+                            <th>Category</th>
+                            <th>Description</th>
+                            <th>Date</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-body">
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
     <div class="pagination-container">
         <div class="row">
