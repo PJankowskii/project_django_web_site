@@ -25,6 +25,7 @@ def index(request):
     return render(request, 'expenses/index.html', context)
 
 
+@login_required(login_url='login')
 def add_expense(request):
     categories = Category.objects.all()
     context = {
@@ -55,6 +56,7 @@ def add_expense(request):
         return redirect('expenses')
 
 
+@login_required(login_url='login')
 def edit_expense(request, id):
     expense = Expense.objects.get(pk=id)
     categories = Category.objects.all()
@@ -86,6 +88,7 @@ def edit_expense(request, id):
         return redirect('expenses')
 
 
+@login_required(login_url='login')
 def delete_expense(request, id):
     expense = Expense.objects.get(pk=id)
     expense.delete()
@@ -93,6 +96,7 @@ def delete_expense(request, id):
     return redirect('expenses')
 
 
+@login_required(login_url='login')
 def search_expenses(request):
     if request.method == 'POST':
         search_str = json.loads(request.body).get('searchText')

@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container-fluid mt-4">
+  <div class="col-md-12">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="{% url 'incomes' %}">Incomes</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+          Add Income
+        </li>
+      </ol>
+    </nav>
+  </div>
+</div>
+<div class="container-fluid mt-5">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <form action="{% url 'add-income' %}" method="post" class="row g-3">
+          {% csrf_token %}
+          {% include 'partials/_messages.html' %}
+          <div class="form-group">
+            <label for="">Amount</label>
+            <input type="number"
+                   class="form-control form-control-sm"
+                   name="amount"
+                   value="{{values.amount}}">
+          </div>
+          <div class="form-group">
+            <label for="">Description</label>
+            <input type="text"
+                   class="form-control form-control-sm"
+                   name="description"
+                   value="{{values.description}}">
+          </div>
+          <div class="form-group">
+            <label for="">Source</label>
+            <select class="form-control form-control-sm" name="source">
+              {% for source in sources %}
+                <option name="source" value="{{source.name}}">
+                  {{source.name}}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="">Date of Income</label>
+            <input
+                    type="date"
+                    class="form-control form-control-sm"
+                    name="income_date">
+          </div>
+          <div class="col-md-2">
+            <input
+                    type="submit"
+                    value="Submit"
+                    class="btn btn-outline-primary btn-sm">
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
