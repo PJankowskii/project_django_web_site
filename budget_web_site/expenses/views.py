@@ -51,6 +51,10 @@ def add_expense(request):
             messages.error(request, 'Description is require.')
             return render(request, 'expenses/add_expense.html', context)
 
+        if not date:
+            messages.error(request, 'Date is require.')
+            return render(request, 'expenses/add_expense.html', context)
+
         Expense.objects.create(owner=request.user, amount=amount, date=date, category=category, description=description)
         messages.success(request, 'Expense saved successfully.')
         return redirect('expenses')

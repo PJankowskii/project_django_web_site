@@ -30,7 +30,13 @@
                                        class="form-control form-control-sm"/>
                             </div>
                             <div class="d-grid">
-                                <input type="submit" value="Login" class="btn btn-primary submit-btn"/>
+                                <input type="submit" value="Login" class="btn btn-primary submit-btn btn-sm"/>
+                            </div>
+                            <div>
+                                <span>Don't have account? <a href="{% url 'register' %}">Register</a></span>
+                            </div>
+                            <div>
+                                <span>Forgot password? <a href="{% url 'reset-password' %}">Reset password</a></span>
                             </div>
                         </form>
                     </div>
