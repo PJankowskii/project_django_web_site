@@ -4,8 +4,14 @@ from .models import Category, Expense
 from django.contrib import messages
 from django.core.paginator import Paginator
 import json
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from user_preferences.models import UserPreference
+import datetime
+
+from django.template.loader import render_to_string
+from weasyprint import HTML
+import tempfile
+from django.db.models import Sum
 
 
 # Create your views here.
@@ -114,3 +120,57 @@ def search_expenses(request):
             category__icontains=search_str, owner=request.user)
         data = expenses_filter.values()
         return JsonResponse(list(data), safe=False)
+
+
+@login_required(login_url='login')
+def summary_expense_category(request):
+    todays_date = datetime.date.today()
+    six_months_ago = todays_date - datetime.timedelta(days=30 * 6)
+    expenses = Expense.objects.filter(owner=request.user, date__gte=six_months_ago, date__lte=todays_date)
+    final_rep = {}
+
+    def get_category(expense):
+        return expense.category
+
+    category_list = list(set(map(get_category, expenses)))
+
+    def get_expense_category_amount(category):
+        amount = 0
+        filtered_by_category = expenses.filter(category=category)
+        for item in filtered_by_category:
+            amount += item.amount
+        return amount
+
+    for x in expenses:
+        for y in category_list:
+            final_rep[y] = get_expense_category_amount(y)
+
+    return JsonResponse({'expense_category_data': final_rep}, safe=False)
+
+
+@login_required(login_url='login')
+def stats_expenses_view(request):
+    return render(request, 'expenses/stats_expenses.html')
+
+
+@login_required(login_url='login')
+def export_expenses_pdf(request):
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'inline; attachment; filename=Expenses' + \
+        str(datetime.datetime.now()) + '.pdf'
+    response['Content-Transfer-Encoding'] = 'binary'
+
+    expenses = Expense.objects.filter(owner=request.user)
+    sum = expenses.aggregate(Sum('amount'))
+
+    html_string = render_to_string('expenses/pdf_output.html', {'expenses': expenses, 'total': sum['amount__sum']})
+    html = HTML(string=html_string)
+    result = html.write_pdf()
+
+    with tempfile.NamedTemporaryFile(delete=True) as output:
+        output.write(result)
+        output.flush()
+        # output = open(output.name, 'rb')
+        output.seek(0)
+        response.write(output.read())
+    return response
