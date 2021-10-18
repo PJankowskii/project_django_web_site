@@ -13,31 +13,35 @@
       </ol>
     </nav>
   </div>
+  <div class="col-md-12">
+    {% include 'partials/_messages.html' %}
 </div>
-<div class="container-fluid mt-5">
+</div>
+<div class="container-fluid mt-4">
   <div class="col-md-12">
     <div class="card">
       <div class="card-body">
         <form action="{% url 'add-expense' %}" method="post" class="row g-3">
           {% csrf_token %}
-          {% include 'partials/_messages.html' %}
           <div class="form-group">
-            <label for="">Amount</label>
-            <input type="number"
+            <label for="amount_id">Amount</label>
+            <input id="amount_id"
+                   type="number"
                    class="form-control form-control-sm"
                    name="amount"
                    value="{{values.amount}}">
           </div>
           <div class="form-group">
-            <label for="">Description</label>
-            <input type="text"
+            <label for="description_id">Description</label>
+            <input id="description_id"
+                   type="text"
                    class="form-control form-control-sm"
                    name="description"
                    value="{{values.description}}">
           </div>
           <div class="form-group">
-            <label for="">Category</label>
-            <select class="form-control form-control-sm" name="category">
+            <label for="category_id">Category</label>
+            <select id="category_id" class="form-control form-control-sm" name="category">
               {% for category in categories %}
                 <option name="category" value="{{category.name}}">
                   {{category.name}}
@@ -46,17 +50,16 @@
             </select>
           </div>
           <div class="form-group">
-            <label for="">Date of Expense</label>
-            <input
+            <label for="date_id">Date of Expense</label>
+            <input  id="date_id"
                     type="date"
                     class="form-control form-control-sm"
                     name="expense_date">
           </div>
           <div class="col-md-2">
-            <input
-                    type="submit"
-                    value="Submit"
-                    class="btn btn-outline-primary btn-sm">
+            <input type="submit"
+                   value="Submit"
+                   class="btn btn-success btn-sm">
           </div>
         </form>
       </div>

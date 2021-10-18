@@ -16,7 +16,7 @@
             </nav>
         </div>
         <div class="col-md-2">
-            <a href="{% url 'add-expense' %}" class="btn btn-primary btn-sm float-end">
+            <a href="{% url 'add-expense' %}" class="btn btn-outline-success btn-sm float-end">
                 Add Expense
             </a>
         </div>
@@ -61,7 +61,7 @@
                             <td>
                                 <a
                                     href="{% url 'edit-expense' expense.id %}"
-                                    class="text-secondary">Edit
+                                    class="text-info">Edit
                                 </a>
                             </td>
                         </tr>
@@ -97,28 +97,45 @@
                 Showing page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
             </div>
             <div class="col-md-6">
-                <ul class="pagination pagination-sm float-end">
-                    {% if page_obj.has_previous %}
-                        <li {% if page_obj.number == 1 %} class="page-item active" {% endif %}>
-                            <a class="page-link" href="?page=1">&laquo; 1</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
-                        </li>
-                    {% endif %}
-                    {% if page_obj.has_next %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }} &raquo;</a>
-                        </li>
-                    {% endif %}
-                </ul>
+                <nav>
+                    <ul class="pagination pagination-sm float-end">
+                        {% if page_obj.has_previous %}
+                            <li {% if page_obj.number == 1 %} class="page-item active" {% endif %}>
+                                <a class="page-link" href="?page=1">&laquo; 1</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                            </li>
+                        {% endif %}
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }} &raquo;</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
             </div>
         </div>
+    {% else %}
+        <div>No expenses</div>
     {% endif %}
     </div>
 </div>
+<style>
+.page-link {
+  color: #000000;
+  background-color: #ffffff;
+  border: 1px solid #000000;
+}
+
+.page-link:focus, .page-link:hover {
+  color: #ffffff;
+  background-color: #808080;
+  border-color: #000000;
+}
+</style>
 <script src="{% static 'js/searchExpenses.js' %}"></script>
 {% endblock %}

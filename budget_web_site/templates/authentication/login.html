@@ -1,6 +1,5 @@
 {% extends 'base_auth.html' %}
 {% load static %}
-
 {% block content %}
 <div class="container-fluid">
     <div class="row">
@@ -11,9 +10,9 @@
                         <div class="card-title py-3">
                             <h4>Login to your account</h4>
                         </div>
+                        {% include 'partials/_messages.html' %}
                         <form action="{% url 'login' %}" method="post" class="row g-3">
                             {% csrf_token %}
-                            {% include 'partials/_messages.html' %}
                             <div class="form-group">
                                 <input type="text"
                                        name="username"

@@ -15,18 +15,41 @@
             </nav>
         </div>
         <div class="col-md-2">
-            <a href="{% url 'delete-income' income.id %}"
-               class="btn btn-danger btn-sm float-end">
+            <button type="button" class="btn btn-danger btn-sm float-end" data-bs-toggle="modal" data-bs-target="#deleteModal">
+              Delete income
+            </button>
+        </div>
+    </div>
+    <div class="col-md-12 mt-4">
+        {% include 'partials/_messages.html' %}
+    </div>
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deleteModalLabel">Delete</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            Are you sure to delete this income?
+          </div>
+          <div class="modal-footer">
+            <a class="btn btn-primary btn-sm" data-bs-dismiss="modal">
+                  Cancel
+              </a>
+              <a href="{% url 'delete-income' income.id %}"
+               class="btn btn-danger btn-sm">
                 Delete
             </a>
+          </div>
         </div>
+      </div>
     </div>
   <div class="col-md-12 mt-4">
     <div class="card">
       <div class="card-body">
         <form action="{% url 'edit-income' income.id %}" method="post" class="row g-3">
           {% csrf_token %}
-          {% include 'partials/_messages.html' %}
           <div class="form-group">
             <label for="">Amount</label>
             <input type="number"
@@ -66,7 +89,7 @@
             <input
                 type="submit"
                 value="Save"
-                class="btn btn-outline-primary btn-sm">
+                class="btn btn-success btn-sm">
           </div>
         </form>
       </div>
