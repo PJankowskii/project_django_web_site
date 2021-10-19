@@ -20,7 +20,7 @@ searchField.addEventListener('keyup', (e) => {
         paginationContainer.style.display = "none";
         console.log('searchValue', searchValue);
 
-        fetch("/search-expenses", {
+        fetch("/expenses/search-expenses", {
             body: JSON.stringify({ searchText: searchValue }),
             method: "POST",
         })

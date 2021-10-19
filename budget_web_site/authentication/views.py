@@ -15,6 +15,7 @@ from .utils import token_generator
 from django.contrib import auth
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 import threading
+from .decorators import unauthenticated_user
 
 
 # Create your views here.
@@ -49,11 +50,12 @@ class UsernameValidationView(View):
         return JsonResponse({'username_valid': True})
 
 
-class RegistrationView(View):
-    def get(self, request):
+@unauthenticated_user
+def register_page(request):
+    if request.method == 'GET':
         return render(request, 'authentication/register.html')
 
-    def post(self, request):
+    if request.method == 'POST':
         # get user data
         # validate
         # create a user account
@@ -110,11 +112,12 @@ class VerificationView(View):
         return redirect('login')
 
 
-class LoginView(View):
-    def get(self, request):
+@unauthenticated_user
+def login_page(request):
+    if request.method == 'GET':
         return render(request, 'authentication/login.html')
 
-    def post(self, request):
+    if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
 
@@ -124,7 +127,7 @@ class LoginView(View):
                 if user.is_active:
                     auth.login(request, user)
                     messages.success(request, 'Welcome ' + user.username + ', you are now logged in')
-                    return redirect('expenses')
+                    return redirect('dashboard')
                 messages.error(request, 'Account is not activated, please check your email for activation link')
                 return render(request, 'authentication/login.html')
             messages.error(request, 'Invalid credentials, try again')
@@ -133,18 +136,19 @@ class LoginView(View):
         return render(request, 'authentication/login.html')
 
 
-class LogoutView(View):
-    def post(self, request):
+def logout(request):
+    if request.method == 'POST':
         auth.logout(request)
         messages.success(request, 'You have been logged out')
         return redirect('login')
 
 
-class ResetPassword(View):
-    def get(self, request):
+@unauthenticated_user
+def reset_password_page(request):
+    if request.method == 'GET':
         return render(request, 'authentication/reset_password.html')
 
-    def post(self, request):
+    if request.method == 'POST':
         email = request.POST['email']
         context = \
             {
