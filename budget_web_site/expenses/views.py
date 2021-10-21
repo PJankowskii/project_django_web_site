@@ -126,26 +126,57 @@ def search_expenses(request):
 def summary_expense_category(request):
     todays_date = datetime.date.today()
     six_months_ago = todays_date - datetime.timedelta(days=30 * 6)
-    expenses = Expense.objects.filter(owner=request.user, date__gte=six_months_ago, date__lte=todays_date)
-    final_rep = {}
+    three_months_ago = todays_date - datetime.timedelta(days=30 * 3)
+    current_month = todays_date - datetime.timedelta(days=30)
+    expenses_six = Expense.objects.filter(owner=request.user, date__gte=six_months_ago, date__lte=todays_date)
+    expenses_three = Expense.objects.filter(owner=request.user, date__gte=three_months_ago, date__lte=todays_date)
+    expenses_one = Expense.objects.filter(owner=request.user, date__gte=current_month, date__lte=todays_date)
+    final_rep_six = {}
+    final_rep_three = {}
+    final_rep_one = {}
 
     def get_category(expense):
         return expense.category
 
-    category_list = list(set(map(get_category, expenses)))
+    category_list_six = list(set(map(get_category, expenses_six)))
+    category_list_three = list(set(map(get_category, expenses_three)))
+    category_list_one = list(set(map(get_category, expenses_one)))
 
-    def get_expense_category_amount(category):
+    def get_expense_category_amount_six(category):
         amount = 0
-        filtered_by_category = expenses.filter(category=category)
+        filtered_by_category = expenses_six.filter(category=category)
         for item in filtered_by_category:
             amount += item.amount
         return amount
 
-    for x in expenses:
-        for y in category_list:
-            final_rep[y] = get_expense_category_amount(y)
+    def get_expense_category_amount_three(category):
+        amount = 0
+        filtered_by_category = expenses_three.filter(category=category)
+        for item in filtered_by_category:
+            amount += item.amount
+        return amount
 
-    return JsonResponse({'expense_category_data': final_rep}, safe=False)
+    def get_expense_category_amount_one(category):
+        amount = 0
+        filtered_by_category = expenses_one.filter(category=category)
+        for item in filtered_by_category:
+            amount += item.amount
+        return amount
+
+    for x in expenses_six:
+        for y in category_list_six:
+            final_rep_six[y] = get_expense_category_amount_six(y)
+
+    for x in expenses_three:
+        for y in category_list_three:
+            final_rep_three[y] = get_expense_category_amount_three(y)
+
+    for x in expenses_one:
+        for y in category_list_one:
+            final_rep_one[y] = get_expense_category_amount_one(y)
+
+    return JsonResponse({'expense_category_data_six': final_rep_six, 'expense_category_data_three': final_rep_three,
+                         'expense_category_data_one': final_rep_one}, safe=False)
 
 
 @login_required(login_url='login')
@@ -157,7 +188,7 @@ def stats_expenses_view(request):
 def export_expenses_pdf(request):
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'inline; attachment; filename=Expenses' + \
-        str(datetime.datetime.now()) + '.pdf'
+                                      str(datetime.datetime.now()) + '.pdf'
     response['Content-Transfer-Encoding'] = 'binary'
 
     expenses = Expense.objects.filter(owner=request.user)

@@ -6,6 +6,7 @@ from django.core.paginator import Paginator
 import json
 from django.http import JsonResponse
 from user_preferences.models import UserPreference
+import datetime
 
 
 # Create your views here.
@@ -113,3 +114,65 @@ def search_incomes(request):
             source__icontains=search_str, owner=request.user)
         data = incomes_filter.values()
         return JsonResponse(list(data), safe=False)
+
+
+@login_required(login_url='login')
+def summary_income_source(request):
+    todays_date = datetime.date.today()
+    six_months_ago = todays_date - datetime.timedelta(days=30 * 6)
+    three_months_ago = todays_date - datetime.timedelta(days=30 * 3)
+    current_month = todays_date - datetime.timedelta(days=30)
+    incomes_six = Income.objects.filter(owner=request.user, date__gte=six_months_ago, date__lte=todays_date)
+    incomes_three = Income.objects.filter(owner=request.user, date__gte=three_months_ago, date__lte=todays_date)
+    incomes_one = Income.objects.filter(owner=request.user, date__gte=current_month, date__lte=todays_date)
+    final_rep_six = {}
+    final_rep_three = {}
+    final_rep_one = {}
+
+    def get_source(income):
+        return income.source
+
+    source_list_six = list(set(map(get_source, incomes_six)))
+    source_list_three = list(set(map(get_source, incomes_three)))
+    source_list_one = list(set(map(get_source, incomes_one)))
+
+    def get_income_source_amount_six(source):
+        amount = 0
+        filtered_by_source = incomes_six.filter(source=source)
+        for item in filtered_by_source:
+            amount += item.amount
+        return amount
+
+    def get_income_source_amount_three(source):
+        amount = 0
+        filtered_by_source = incomes_three.filter(source=source)
+        for item in filtered_by_source:
+            amount += item.amount
+        return amount
+
+    def get_income_source_amount_one(source):
+        amount = 0
+        filtered_by_source = incomes_one.filter(source=source)
+        for item in filtered_by_source:
+            amount += item.amount
+        return amount
+
+    for x in incomes_six:
+        for y in source_list_six:
+            final_rep_six[y] = get_income_source_amount_six(y)
+
+    for x in incomes_three:
+        for y in source_list_three:
+            final_rep_three[y] = get_income_source_amount_three(y)
+
+    for x in incomes_one:
+        for y in source_list_one:
+            final_rep_one[y] = get_income_source_amount_one(y)
+
+    return JsonResponse({'income_source_data_six': final_rep_six, 'income_source_data_three': final_rep_three,
+                         'income_source_data_one': final_rep_one}, safe=False)
+
+
+@login_required(login_url='login')
+def stats_incomes_view(request):
+    return render(request, 'incomes/stats_incomes.html')
