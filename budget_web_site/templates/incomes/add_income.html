@@ -24,22 +24,23 @@
         <form action="{% url 'add-income' %}" method="post" class="row g-3">
           {% csrf_token %}
           <div class="form-group">
-            <label for="">Amount</label>
+            <label for=""><i class="bi bi-coin"></i> Amount</label>
             <input type="number"
-                   class="form-control form-control-sm"
+                   step="0.01"
+                   class="form-control form-control"
                    name="amount"
                    value="{{values.amount}}">
           </div>
           <div class="form-group">
-            <label for="">Description</label>
+            <label for=""><i class="bi bi-chat-square-text"></i> Description</label>
             <input type="text"
-                   class="form-control form-control-sm"
+                   class="form-control form-control"
                    name="description"
                    value="{{values.description}}">
           </div>
           <div class="form-group">
-            <label for="">Source</label>
-            <select class="form-control form-control-sm" name="source">
+            <label for=""><i class="bi bi-tags"></i> Source</label>
+            <select class="form-control form-control" name="source">
               {% for source in sources %}
                 <option name="source" value="{{source.name}}">
                   {{source.name}}
@@ -48,17 +49,17 @@
             </select>
           </div>
           <div class="form-group">
-            <label for="">Date of Income</label>
+            <label for=""><i class="bi bi-calendar-week"></i> Date of Income</label>
             <input
                     type="date"
-                    class="form-control form-control-sm"
+                    class="form-control form-control"
                     name="income_date">
           </div>
           <div class="col-md-2">
             <input
                     type="submit"
                     value="Submit"
-                    class="btn btn-success btn-sm">
+                    class="btn btn-outline-success btn">
           </div>
         </form>
       </div>

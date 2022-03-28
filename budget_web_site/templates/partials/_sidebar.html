@@ -5,16 +5,19 @@
       <li class="nav-item">
         <a class="nav-link active" aria-current="page" href="{% url 'dashboard' %}">
           <span data-feather="home"></span>
+          <i class="bi bi-house"></i>
           Dashboard
         </a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="{% url 'expenses' %}">
+          <i class="bi bi-wallet2"></i>
           Expenses
         </a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="{% url 'incomes' %}">
+          <i class="bi bi-wallet2"></i>
           Incomes
         </a>
       </li>
@@ -29,32 +32,42 @@
     <ul class="nav flex-column mb-2">
       <li class="nav-item">
         <a class="nav-link" href="{% url 'stats-expenses' %}">
+          <i class="bi bi-pie-chart"></i>
           Expenses Summary
         </a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="{% url 'stats-incomes' %}">
+          <i class="bi bi-pie-chart"></i>
           Incomes Summary
         </a>
       </li>
     </ul>
     <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-      <span>Settings</span>
+      <span>If want to sign out click below</span>
       <a class="link-secondary" href="#" aria-label="Add a new report">
         <span data-feather="plus-circle"></span>
       </a>
     </h6>
     <ul class="nav flex-column mb-2">
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'preferences' %}">
-          General
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">
-          Account
-        </a>
+<!--      ADDED LINK TO CHANGE CURRENCY-->
+<!--      <li class="nav-item">-->
+<!--        <a class="nav-link" href="{% url 'preferences' %}">-->
+<!--          General-->
+<!--        </a>-->
+<!--      </li>-->
+      <li class="nav-item" >
+        <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <input class="btn-link" type="submit" value="Sign out">
+<!--              <a class="nav-link px-3" href="#">Sign out</a>-->
+        </form>
       </li>
     </ul>
+  </div>
+  <div>
+    <span class="nav-link" id="ip_span_name" >
+      You are logged in as: <i class="bi bi-person"></i> {{request.user.username}}
+    </span>
   </div>
 </nav>

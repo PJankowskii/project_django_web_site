@@ -12,4 +12,5 @@ urlpatterns = \
         path('summary-expense-category', views.summary_expense_category, name="summary-expense-category"),
         path('stats-expenses', views.stats_expenses_view, name="stats-expenses"),
         path('export-expenses-pdf', views.export_expenses_pdf, name="export-expenses-pdf"),
+        path('export-summary-expenses-pdf', views.export_summary_expenses_pdf, name="export-summary-expenses-pdf"),
     ]

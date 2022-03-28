@@ -7,37 +7,55 @@
             <nav aria-label="breadcrumb">
               <ol class="breadcrumb">
                 <li class="breadcrumb-item">
+                    <a href="{% url 'expenses' %}">Expenses</a>
+                </li>
+                <li class="breadcrumb-item">
                     <a href="">Expenses Summary</a>
                 </li>
                 <li class="breadcrumb-item active" aria-current="page">
-                    My Summary
+                    My Summary Expenses Per Category
                 </li>
               </ol>
             </nav>
         </div>
     </div>
-    <div class="col-md-12">
-        <div class="chartBox chart-container">
-            <canvas id="myChartOne"></canvas>
-        </div>
-    </div>
-    <div class="col-md-12 mt-4">
-        <div class="chartBox">
-            <canvas id="myChartThree"></canvas>
-        </div>
-    </div>
-    <div class="col-md-12 mt-4">
-        <div class="chartBox">
-            <canvas id="myChart"></canvas>
+</div>
+{% if expenses.count %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <a href="{% url 'export-summary-expenses-pdf' %}" class="btn btn-outline-secondary btn float-start">
+                <i class="bi bi-filetype-pdf"></i> Export summary to PDF</a>
         </div>
     </div>
 </div>
-<style>
-    .chartBox {
-        position: relative;
-        width:1500px;
-        margin: 0 auto;
-    }
-</style>
+<div class="container-fluid mt-4">
+    <div class="col-md-12">
+        {% if expenses_one.count %}
+        <div class="chartBox chart-container">
+            <canvas id="myChartOne"></canvas>
+        </div>
+        {% endif %}
+    </div>
+    <div class="col-md-12 mt-4">
+        {% if expenses_three.count %}
+        <div class="chartBox">
+            <canvas id="myChartThree"></canvas>
+        </div>
+        {% endif %}
+    </div>
+    <div class="col-md-12 mt-4">
+        {% if expenses_six.count %}
+        <div class="chartBox">
+            <canvas id="myChart"></canvas>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% else %}
+<div class="container-fluid mt-4">
+    <div>Add expense to create chart</div>
+</div>
+{% endif %}
 <script src="{% static 'js/statsExpenses.js' %}"></script>
 {% endblock %}

@@ -16,8 +16,8 @@
             </nav>
         </div>
         <div class="col-md-2">
-            <a href="{% url 'add-income' %}" class="btn btn-outline-success btn-sm float-end">
-                Add Income
+            <a href="{% url 'add-income' %}" class="btn btn-outline-secondary btn float-end">
+              <i class="bi bi-plus-circle"></i> Add Income
             </a>
         </div>
     </div>
@@ -28,22 +28,28 @@
 <div class="container-fluid">
     {% if incomes.count %}
     <div class="row">
-        <div class="col-md-8"></div>
         <div class="col-md-4">
-            <div class="form-group">
+            <a href="{% url 'export-incomes-pdf' %}" class="btn btn-outline-secondary btn float-start"><i class="bi bi-filetype-pdf"></i> Export PDF</a>
+        </div>
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <div class="input-group">
+                <span class="input-group-text" id="addon-wrapping"><i class="bi bi-search"></i></span>
                 <input type="text" class="form-control" id="searchField" placeholder="Search">
             </div>
         </div>
     </div>
-    <div class="table-app mt-3">
-        <table class="table table-stripped table-hover table-sm">
+    <div class="table-app table-responsive mt-3">
+        <table class="table table-stripped table-hover table">
             <thead>
                 <tr>
-                    <th>Amount ({{currency}})</th>
-                    <th>Source</th>
-                    <th>Description</th>
-                    <th>Date</th>
-                    <th>Actions</th>
+<!--                    ADDED CURRENCY TO TABLE-->
+<!--                    <th>Amount ({{currency}})</th>-->
+                    <th><i class="bi bi-coin"></i> Amount</th>
+                    <th><i class="bi bi-tags"></i> Source</th>
+                    <th><i class="bi bi-chat-square-text"></i> Description</th>
+                    <th><i class="bi bi-calendar-week"></i> Date</th>
+                    <th><i class="bi bi-pencil"></i> Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -51,8 +57,12 @@
                 <tr>
                     <td>{{income.amount}}</td>
                     <td>{{income.source}}</td>
-                    <td>{{income.description}}</td>
-                    <td>{{income.date}}</td>
+                    <td data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{income.description}}">{{income.description|truncatechars:12}}</td>
+                    {% if income.date > todays_date %}
+                        <td style="color:red">{{income.date}}</td>
+                    {% else %}
+                        <td>{{income.date}}</td>
+                    {% endif %}
                     <td>
                         <a
                             href="{% url 'edit-income' income.id %}"
@@ -66,14 +76,16 @@
     </div>
     <div class="no-results">No results found</div>
     <div class="table-output mt-3">
-        <table class="table table-stripped table-hover table-sm">
+        <table class="table table-stripped table-hover table">
             <thead>
                 <tr>
-                    <th>Amount ({{currency}})</th>
-                    <th>Source</th>
-                    <th>Description</th>
-                    <th>Date</th>
-                    <th></th>
+<!--                    ADDED CURRENCY TO TABLE-->
+<!--                    <th>Amount ({{currency}})</th>-->
+                    <th><i class="bi bi-coin"></i> Amount</th>
+                    <th><i class="bi bi-tags"></i> Source</th>
+                    <th><i class="bi bi-chat-square-text"></i> Description</th>
+                    <th><i class="bi bi-calendar-week"></i> Date</th>
+                    <th><i class="bi bi-pencil"></i> Action</th>
                 </tr>
             </thead>
             <tbody class="table-body">
@@ -82,17 +94,23 @@
     </div>
     <div class="pagination-container">
         <div class="row">
-            <div class="col-md-6">
-                Showing page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
-            </div>
-            <div class="col-md-6">
-                <ul class="pagination pagination-sm float-end">
+            <div class="col-md-12">
+                <ul class="pagination float-end">
                     {% if page_obj.has_previous %}
                         <li {% if page_obj.number == 1 %} class="page-item active" {% endif %}>
                             <a class="page-link" href="?page=1">&laquo; 1</a>
                         </li>
+                        {% if page_obj.number != 2 %}
                         <li class="page-item">
                             <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                        </li>
+                        {% else %}
+                        {% endif %}
+                    {% endif %}
+                    {% if page_obj.number == 1 %}
+                    {% else %}
+                        <li class="page-item active">
+                            <span class="page-link" >Page {{ page_obj.number }}</span>
                         </li>
                     {% endif %}
                     {% if page_obj.has_next %}
@@ -111,5 +129,18 @@
     {% endif %}
     </div>
 </div>
+<style>
+.page-link {
+  color: #000000;
+  background-color: #ffffff;
+  border: 1px solid #343a40;
+}
+
+.page-link:focus, .page-link:hover {
+  color: #ffffff;
+  background-color: #55595c;
+  border-color: #343a40;
+}
+</style>
 <script src="{% static 'js/searchIncomes.js' %}"></script>
 {% endblock %}

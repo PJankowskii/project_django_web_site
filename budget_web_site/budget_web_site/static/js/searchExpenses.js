@@ -37,12 +37,14 @@ searchField.addEventListener('keyup', (e) => {
                 } else {
                     noResults.style.display = "none";
                     data.forEach(item => {
+                    const link_edit = '<a class=text-info href=/expenses/edit-expense/' + item.id + '>Edit</a>';
                     tableBody.innerHTML += `
                     <tr>
                         <td>${item.amount}</td>
                         <td>${item.category}</td>
                         <td>${item.description}</td>
                         <td>${item.date}</td>
+                        <td>${link_edit}</td>
                     </tr>`;
                     });
                 }

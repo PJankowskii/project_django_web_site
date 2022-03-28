@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Expenses summary</title>
+    <style>
+        @page{
+            size: "A4";
+            margin: 2.5cm 1.5cm 3.5cm 1.5cm;
+            @top-center{
+                content: "BudgetCalculator";
+            }
+            @bottom-right{
+                content: "Page " counter(page) " of " counter(pages);
+            }
+        }
+    </style>
+</head>
+<body>
+<h2>One month expenses per category</h2>
+<table>
+    <thead>
+        <tr>
+            {% for key in final_rep_one.keys %}
+                <th>{{key}}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            {% for value in final_rep_one.values %}
+                <td>{{value}}</td>
+            {% endfor %}
+            <td>Total</td>
+            <td>{{total_one}}</td>
+        </tr>
+    </tbody>
+</table>
+<h2>Three months expenses per category</h2>
+<table>
+    <thead>
+        <tr>
+            {% for key in final_rep_three.keys %}
+                <th>{{key}}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            {% for value in final_rep_three.values %}
+                <td>{{value}}</td>
+            {% endfor %}
+            <td>Total</td>
+            <td>{{total_three}}</td>
+        </tr>
+    </tbody>
+</table>
+<h2>Six month expenses per category</h2>
+<table>
+    <thead>
+        <tr>
+            {% for key in final_rep_six.keys %}
+                <th>{{key}}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            {% for value in final_rep_six.values %}
+                <td>{{value}}</td>
+            {% endfor %}
+            <td>Total</td>
+            <td>{{total_six}}</td>
+        </tr>
+    </tbody>
+</table>
+</body>
+</html>

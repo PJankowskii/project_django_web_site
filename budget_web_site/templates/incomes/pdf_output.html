@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Expenses list</title>
+    <title>Incomes list</title>
     <style>
         @page{
             size: "A4";
@@ -17,23 +17,23 @@
     </style>
 </head>
 <body>
-    <h2>Expenses List</h2>
+    <h2>Incomes List</h2>
     <table>
         <thead>
             <tr>
                 <th>No</th>
                 <th>Amount</th>
-                <th>Category</th>
+                <th>Source</th>
                 <th>Date</th>
             </tr>
         </thead>
         <tbody>
-            {% for expense in expenses %}
+            {% for income in incomes %}
             <tr>
                 <td>{{forloop.counter}}</td>
-                <td>{{expense.amount}}</td>
-                <td>{{expense.category}}</td>
-                <td>{{expense.date}}</td>
+                <td>{{income.amount}}</td>
+                <td>{{income.source}}</td>
+                <td>{{income.date}}</td>
             </tr>
             {% endfor %}
             <tr>

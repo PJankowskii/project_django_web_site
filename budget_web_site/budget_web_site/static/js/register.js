@@ -6,6 +6,7 @@ const emailFeedBackArea=document.querySelector(".emailFeedBackArea");
 
 
 const passwordField = document.querySelector("#passwordField");
+const passwordFeedBackArea=document.querySelector(".passwordFeedBackArea");
 const showPasswordToggle = document.querySelector(".showPasswordToggle");
 
 const submitBtn = document.querySelector(".submit-btn");
@@ -22,6 +23,33 @@ const handleToggleInput = (e) =>{
 
 showPasswordToggle.addEventListener('click', handleToggleInput);
 
+
+passwordField.addEventListener("keyup", (e) => {
+    const passwordVal=e.target.value;
+
+    passwordField.classList.remove("is-invalid");
+    passwordFeedBackArea.style.display = "none";
+
+    if(passwordVal.length > 0) {
+        fetch("/authentication/validate-password", {
+            body: JSON.stringify({ password: passwordVal }),
+            method: "POST",
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log("data", data);
+                if (data.password_error) {
+                    passwordField.classList.add("is-invalid");
+                    passwordFeedBackArea.style.display = "block";
+                    passwordFeedBackArea.innerHTML = `<p>${data.password_error}</p>`
+
+                    submitBtn.disabled = true ;
+                } else {
+                    submitBtn.removeAttribute("disabled");
+                }
+        });
+    }
+});
 
 
 emailField.addEventListener("keyup", (e) => {

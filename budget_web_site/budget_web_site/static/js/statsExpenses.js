@@ -24,10 +24,6 @@ const renderChartOne = (data, labels) => {
                 display: true,
                 text: "Last month expenses per category",
             },
-            animation: {
-                animateScale: true,
-                animateRotate: true
-            },
         },
     });
 };
@@ -70,10 +66,6 @@ const renderChartThree = (data, labels) => {
                 display: true,
                 text: "Last 3 months expenses per category",
             },
-            animation: {
-                animateScale: true,
-                animateRotate: true
-            },
         }
     });
 };
@@ -115,10 +107,6 @@ const renderChart = (data, labels) => {
             title:{
                 display: true,
                 text: "Last 6 months expenses per category",
-            },
-            animation: {
-                animateScale: true,
-                animateRotate: true
             },
         }
     });

@@ -17,8 +17,8 @@
         </div>
         <div class="col-md-2">
                 <!-- Button trigger modal -->
-            <button type="button" class="btn btn-danger btn-sm float-end" data-bs-toggle="modal" data-bs-target="#deleteModal">
-              Delete expense
+            <button type="button" class="btn btn-outline-danger btn float-end" data-bs-toggle="modal" data-bs-target="#deleteModal">
+             <i class="bi bi-trash3"></i> Delete expense
             </button>
         </div>
     </div>
@@ -37,11 +37,11 @@
             Are you sure to delete this expense?
           </div>
           <div class="modal-footer">
-            <a class="btn btn-primary btn-sm" data-bs-dismiss="modal">
+            <a class="btn btn-outline-primary btn-sm" data-bs-dismiss="modal">
                   Cancel
               </a>
               <a href="{% url 'delete-expense' expense.id %}"
-               class="btn btn-danger btn-sm">
+               class="btn btn-outline-danger btn-sm">
                 Delete
             </a>
           </div>
@@ -54,22 +54,23 @@
         <form action="{% url 'edit-expense' expense.id %}" method="post" class="row g-3">
           {% csrf_token %}
           <div class="form-group">
-            <label for="">Amount</label>
+            <label for=""><i class="bi bi-coin"></i> Amount</label>
             <input type="number"
-                   class="form-control form-control-sm"
+                   step="0.01"
+                   class="form-control form-control"
                    name="amount"
                    value="{{values.amount}}">
           </div>
           <div class="form-group">
-            <label for="">Description</label>
+            <label for=""><i class="bi bi-chat-square-text"></i> Description</label>
             <input type="text"
-                   class="form-control form-control-sm"
+                   class="form-control form-control"
                    name="description"
                    value="{{values.description}}">
           </div>
           <div class="form-group">
-            <label for="">Category</label>
-            <select class="form-control form-control-sm" name="category">
+            <label for=""><i class="bi bi-tags"></i> Category</label>
+            <select class="form-control form-control" name="category">
                 <option selected name="category" value="{{values.category}}">
                   {{values.category}}
                 </option>
@@ -81,19 +82,19 @@
             </select>
           </div>
           <div class="form-group">
-            <label for="">Date of Expense</label>
+            <label for=""><i class="bi bi-calendar-week"></i> Date of Expense</label>
             <input
                 type="date"
                 value="{{values.date |date:'Y-m-d' }}"
-                class="form-control form-control-sm"
+                class="form-control form-control"
                 name="expense_date">
           </div>
-          <div class="col-md-2">
-            <input
-                type="submit"
-                value="Save"
-                class="btn btn-success btn-sm">
-          </div>
+              <div class="col-md-2">
+                <input
+                    type="submit"
+                    value="Save"
+                    class="btn btn-outline-success btn">
+              </div>
         </form>
       </div>
     </div>

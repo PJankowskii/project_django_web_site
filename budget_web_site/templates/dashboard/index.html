@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
 <div class="container-fluid mt-4">
     <div class="row">
-        <div class="col-md-10">
+        <div class="col-md-12">
             <nav aria-label="breadcrumb">
               <ol class="breadcrumb">
                 <li class="breadcrumb-item">
@@ -20,16 +21,67 @@
     </div>
 </div>
 <div class="container-fluid">
+    <div class="col-md-12">
+        {% if budget < 0 %}
+            <span style="color:red"><i class="bi bi-wallet"></i> Your present budget: {{ budget }}</span>
+        {% else %}
+            <span><i class="bi bi-wallet"></i> Your present budget: {{ budget }}</span>
+        {% endif %}
+    </div>
+    <div class="col-md-12 mt-3">
+        {% if daily_average <= 10 and daily_average > 0 %}
+            <span style="color:orange"><i class="bi bi-activity"></i> Your average daily amount: {{ daily_average }}</span>
+        {% elif daily_average <= 0 %}
+            <span style="color:red"><i class="bi bi-activity"></i> Your budget is to low, can't calculate average amount</span>
+        {% else %}
+            <span><i class="bi bi-activity"></i> Your average daily amount: {{ daily_average }}</span>
+        {% endif %}
+    </div>
+</div>
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-md-6">
+            <a href="{% url 'expenses' %}" class="btn btn-outline-secondary btn">
+              <i class="bi bi-wallet2"></i> Check Expenses
+            </a>
+            <a href="{% url 'stats-expenses' %}" class="btn btn-outline-secondary btn">
+              <i class="bi bi-pie-chart"></i> Check Expenses summary
+            </a>
+            <a href="{% url 'add-expense' %}" class="btn btn-outline-secondary btn">
+               <i class="bi bi-plus-circle"></i> Add Expense
+            </a>
+        </div>
+        <div class="col-md-6">
+            <a href="{% url 'incomes' %}" class="btn btn-outline-secondary btn">
+               <i class="bi bi-wallet2"></i> Check Incomes
+            </a>
+            <a href="{% url 'stats-incomes' %}" class="btn btn-outline-secondary btn">
+              <i class="bi bi-pie-chart"></i> Check Incomes summary
+            </a>
+            <a href="{% url 'add-income' %}" class="btn btn-outline-secondary btn">
+               <i class="bi bi-plus-circle"></i> Add Income
+            </a>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
     <div class="row">
         <div class="col-md-6">
             {% if expenses.count %}
                 <div class="table-app mt-3">
-                    <table class="table table-stripped table-hover table-sm">
+                    <table class="table table-stripped table-hover table-">
                         <thead>
                             <tr>
-                                <th>{{currency}}</th>
-                                <th>Category</th>
-                                <th>Date</th>
+                                <th><i class="bi bi-star"></i> last 5 added expenses</th>
+                            </tr>
+                        </thead>
+                        <thead>
+                            <tr>
+<!--                                CURRENCY INSTEAD AMOUNT-->
+<!--                                <th>{{currency}}</th>-->
+                                <th><i class="bi bi-coin"></i> Amount</th>
+                                <th><i class="bi bi-tags"></i> Category</th>
+                                <th><i class="bi bi-calendar-week"></i> Date</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -37,23 +89,38 @@
                             <tr>
                                 <td>{{expense.amount}}</td>
                                 <td>{{expense.category}}</td>
-                                <td>{{expense.date}}</td>
+                                {% if expense.date > todays_date %}
+                                    <td style="color:red">{{expense.date}}</td>
+                                {% else %}
+                                    <td>{{expense.date}}</td>
+                                {% endif %}
                             </tr>
                         {% endfor %}
                         </tbody>
                     </table>
+                </div>
+            {% else %}
+                <div class="mt-4">
+                    <div>Hurry up and add expense</div>
                 </div>
             {% endif %}
         </div>
         <div class="col-md-6">
             {% if incomes.count %}
                 <div class="table-app mt-3">
-                    <table class="table table-stripped table-hover table-sm">
+                    <table class="table table-stripped table-hover table">
                         <thead>
                             <tr>
-                                <th>{{currency}}</th>
-                                <th>Source</th>
-                                <th>Date</th>
+                                <th><i class="bi bi-star"></i> last 5 added incomes</th>
+                            </tr>
+                        </thead>
+                        <thead>
+                            <tr>
+<!--                                CURRENCY INSTEAD AMOUNT-->
+<!--                                <th>{{currency}}</th>-->
+                                <th><i class="bi bi-coin"></i> Amount</th>
+                                <th><i class="bi bi-tags"></i> Source</th>
+                                <th><i class="bi bi-calendar-week"></i> Date</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -61,14 +128,40 @@
                             <tr>
                                 <td>{{income.amount}}</td>
                                 <td>{{income.source}}</td>
-                                <td>{{income.date}}</td>
+                                {% if income.date > todays_date %}
+                                    <td style="color:red">{{income.date}}</td>
+                                {% else %}
+                                    <td>{{income.date}}</td>
+                                {% endif %}
                             </tr>
                         {% endfor %}
                         </tbody>
                     </table>
                 </div>
+            {% else %}
+                <div class="mt-4">
+                    <div>Hurry up and add income</div>
+                </div>
             {% endif %}
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-6">
+            {% if expenses_one.count %}
+                <div class="chartBox chart-container">
+                    <canvas id="myChartOne"></canvas>
+                </div>
+            {% endif %}
+        </div>
+        <div class="col-md-6">
+            {% if incomes_one.count %}
+                <div class="chartBox chart-container">
+                    <canvas id="myChartTwo"></canvas>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
 </div>
+<script src="{% static 'js/statsDashboard.js' %}"></script>
 {% endblock %}

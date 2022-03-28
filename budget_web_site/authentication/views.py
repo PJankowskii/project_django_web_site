@@ -34,6 +34,8 @@ class EmailValidationView(View):
         email = data['email']
         if not validate_email(email):
             return JsonResponse({'email_error': 'Email is invalid.'}, status=400)
+        if len(email) > 254:
+            return JsonResponse({'email_error': 'Email should be 254 characters or fewer.'}, status=400)
         if User.objects.filter(email=email).exists():
             return JsonResponse({'email_error': 'This email has been used.'}, status=409)
         return JsonResponse({'email_valid': True})
@@ -45,9 +47,22 @@ class UsernameValidationView(View):
         username = data['username']
         if not str(username).isalnum():
             return JsonResponse({'username_error': 'Username should only contain alphanumeric characters.'}, status=400)
+        if len(username) > 150:
+            return JsonResponse({'username_error': 'Username should be 150 characters or fewer.'}, status=400)
         if User.objects.filter(username=username).exists():
             return JsonResponse({'username_error': 'This username already exist, choose another one.'}, status=409)
         return JsonResponse({'username_valid': True})
+
+
+class PasswordValidationView(View):
+    def post(self, request):
+        data = json.loads(request.body)
+        password = data['password']
+        if len(password) < 6:
+            return JsonResponse({'password_error': 'Password should be more than 6 characters.'}, status=400)
+        if len(password) > 128:
+            return JsonResponse({'password_error': 'Password should be 128 characters or fewer.'}, status=400)
+        return JsonResponse({'password_valid': True})
 
 
 @unauthenticated_user
@@ -70,6 +85,9 @@ def register_page(request):
             if not User.objects.filter(email=email).exists():
                 if len(password) < 6:
                     messages.error(request, "Password is too short")
+                    return render(request, 'authentication/register.html', context)
+                if len(password) > 128:
+                    messages.error(request, "Password is too long")
                     return render(request, 'authentication/register.html', context)
                 user = User.objects.create_user(username=username, email=email)
                 user.set_password(password)
@@ -175,7 +193,8 @@ def reset_password_page(request):
             reset_url = 'http://' + domain + link
 
             email_subject = 'Password reset instructions.'
-            email_body = 'Hello, please use this link to reset your password.\n' + reset_url
+            email_body = 'Hello ' + str(
+                email_contents['user']) + ', please use this link to reset your password.\n' + reset_url
             email = EmailMessage(
                 email_subject,
                 email_body,
@@ -199,7 +218,7 @@ class CompletePasswordReset(View):
             user_id = force_text(urlsafe_base64_decode(uidb64))
             user = User.objects.get(pk=user_id)
             if not PasswordResetTokenGenerator().check_token(user, token):
-                messages.info(request, 'Password link is invalid, please generate new')
+                messages.info(request, 'Reset password link is invalid, please generate new')
                 return render(request, 'authentication/reset_password.html')
         except Exception as identifier:
             pass

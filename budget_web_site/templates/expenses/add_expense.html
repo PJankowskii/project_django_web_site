@@ -24,24 +24,25 @@
         <form action="{% url 'add-expense' %}" method="post" class="row g-3">
           {% csrf_token %}
           <div class="form-group">
-            <label for="amount_id">Amount</label>
+            <label for="amount_id"><i class="bi bi-coin"></i> Amount</label>
             <input id="amount_id"
                    type="number"
-                   class="form-control form-control-sm"
+                   step="0.01"
+                   class="form-control form-control"
                    name="amount"
                    value="{{values.amount}}">
           </div>
           <div class="form-group">
-            <label for="description_id">Description</label>
+            <label for="description_id"><i class="bi bi-chat-square-text"></i> Description</label>
             <input id="description_id"
                    type="text"
-                   class="form-control form-control-sm"
+                   class="form-control form-control"
                    name="description"
                    value="{{values.description}}">
           </div>
           <div class="form-group">
-            <label for="category_id">Category</label>
-            <select id="category_id" class="form-control form-control-sm" name="category">
+            <label for="category_id"><i class="bi bi-tags"></i> Category</label>
+            <select id="category_id" class="form-control form-control" name="category">
               {% for category in categories %}
                 <option name="category" value="{{category.name}}">
                   {{category.name}}
@@ -50,16 +51,16 @@
             </select>
           </div>
           <div class="form-group">
-            <label for="date_id">Date of Expense</label>
+            <label for="date_id"><i class="bi bi-calendar-week"></i> Date of Expense</label>
             <input  id="date_id"
                     type="date"
-                    class="form-control form-control-sm"
+                    class="form-control form-control"
                     name="expense_date">
           </div>
           <div class="col-md-2">
             <input type="submit"
                    value="Submit"
-                   class="btn btn-success btn-sm">
+                   class="btn btn-outline-success btn">
           </div>
         </form>
       </div>
